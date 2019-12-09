@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.mybatis.mapper.CustomerMapper">
+
+
+    <resultMap id="row" type="com.zking.mybatis.model.Customer">
+        <id column="customer_id" property="customerId" javaType="java.lang.Integer"></id>
+        <result column="customer_name" property="customerName" javaType="java.lang.String"></result>
+        <collection property="orders" ofType="com.zking.mybatis.model.Order">
+            <id column="order_id" property="orderId" javaType="java.lang.Integer"></id>
+            <result column="order_no" property="orderNo" javaType="java.lang.String"></result>
+            <result column="cid" property="cid" javaType="java.lang.Integer"></result>
+        </collection>
+    </resultMap>
+
+
+
+    <select id="list" resultMap="row">
+        select t1.customer_id,t1.customer_name,t2.order_id,t2.order_no,t2.cid
+        from t_customer t1 inner join  t_order t2 on t1.customer_id=t2.cid
+
+        <where>
+            <if test="paramMap !=null and paramMap.size !=0"  >
+                and t1.customer_name like concat('%',#{paramMap.customerName},'%')
+            </if>
+
+        </where>
+    </select>
+</mapper>

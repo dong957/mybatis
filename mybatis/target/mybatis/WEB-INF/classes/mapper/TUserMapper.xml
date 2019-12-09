@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.mybatis.mapper.TUserMapper">
+<resultMap id="userMap" type="com.zking.mybatis.model.TSysUser">
+    <id column="userid" property="userid" javaType="java.lang.Integer"></id>
+    <result column="username" property="username" javaType="java.lang.String"></result>
+    <result column="PASSWORD" property="password" javaType="java.lang.String"></result>
+    <result column="salt" property="salt" javaType="java.lang.String"></result>
+    <result column="createdate" property="createdate" javaType="java.util.Date"></result>
+
+</resultMap>
+
+
+
+
+    <select id="load" resultType="com.zking.mybatis.model.TSysUser">
+        select  userid,username,PASSWORD,salt,createdate
+        from t_sys_user t
+        where t.username=#{username}
+    </select>
+
+
+
+    <select id="getRolesByUserName" resultType="java.lang.String">
+        select t1.rolename
+        from t_sys_role t1
+        inner join t_sys_user_role t2 on t1.roleid = t2.roleid
+        inner join t_sys_user t3 on t2.userid = t3.userid
+        where t3.username=#{username}
+
+    </select>
+
+
+
+    <select id="getPermissionsByUserName" resultType="java.lang.String">
+     select t5.permission
+     from t_sys_user t1
+     inner  join  t_sys_user_role t2 on t1.userid = t2.userid
+     inner  join  t_sys_role t3 on t2.roleid = t3.roleid
+     inner  join t_sys_role_permission t4 on t2.roleid = t4.roleid
+     inner  join t_sys_permission t5 on t4.perid = t5.perid
+     where t1.username=#{username}
+    </select>
+</mapper>
